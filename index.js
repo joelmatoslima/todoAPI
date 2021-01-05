@@ -17,7 +17,7 @@ var BD = {
         },
         {
             id: 2,
-            nome: "Minecraft",
+            nome: "Minecraftt",
             price: 202020
         },
         {
