@@ -9,76 +9,52 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
 var BD = {
-    game: [
+    todo: [
         {
-            id: 1,
-            nome: "GTA-Vs",
-            price: 101010
+            id: Date.now(),
+            nome: "Tentar Conquistar o Mundo",
+            done: false
+
+         
         },
-        {
-            id: 2,
-            nome: "Minecraftt",
-            price: 202020
-        },
-        {
-            id: 3,
-            nome: "Need for speed",
-            price: 303030
-        }
+       
+        
     ]
 }
 
-var jogo = [
-    {
-        id: 1,
-        nome: "GTA-6",
-        price: 101010
-    },
-    {
-        id: 2,
-        nome: "Minecraft",
-        price: 202020
-    },
-    {
-        id: 3,
-        nome: "Need for speed",
-        price: 303030
-    }
 
-]
-
-
-
-app.get("/games", (req, res) => {
+app.get("/todos", (req, res) => {
     res.statusCode = 200
-    res.json(BD.game)
-    // res.send("ola")
+    res.json(BD.todo)
+    
 })
 
-app.get("/game/:id", (req, res) => {
+app.get("/todo/:id", (req, res) => {
 
     if (isNaN(req.params.id)) {
         res.sendStatus(404)
     } else {
         let id = Number(req.params.id)
-        let filtroGames = BD.game.find((i) => i.id === id)
+        let filtroTodos = BD.todo.find((i) => i.id === id)
 
-        if (filtroGames != undefined) {
+        if (filtroTodos != undefined) {
             res.statusCode = 200
-            res.json(filtroGames)
+            res.json(filtroTodos)
         } else {
             res.sendStatus(400)
         }
     }
 })
 
-app.post("/game", (req, res) => {
-    let { id, nome, price } = req.body
+app.post("/todo", (req, res) => {
+    let { id, nome,done } = req.body
 
-    BD.game.push({
+    BD.todo.push({
         id,
         nome,
-        price
+        done
+
+        
 
     })
     res.sendStatus(200)
@@ -87,7 +63,7 @@ app.post("/game", (req, res) => {
 })
 
 
-app.delete("/game/:id", (req, res) => {
+app.delete("/todo/:id", (req, res) => {
     let id = req.params.id
 
     if (isNaN(id)) {
@@ -95,40 +71,41 @@ app.delete("/game/:id", (req, res) => {
     } else {
         id = Number(id)
 
-        let ind = BD.game.findIndex((i) => i.id == id)
+        let ind = BD.todo.findIndex((i) => i.id == id)
 
         if (ind == -1) {
             res.sendStatus(404)
         } else {
-            BD.game.splice(ind, 1)
+            BD.todo.splice(ind, 1)
             res.sendStatus(200)
         }
 
     }
 })
 
-app.put("/game/:id", (req, res) => {
+app.put("/todo/:id", (req, res) => {
 
     if (isNaN(req.params.id)) {
         res.sendStatus(404)
     } else {
         let id = Number(req.params.id)
-        let filtroGames = BD.game.find((i) => i.id === id)
+        let filtroTodos = BD.todo.find((i) => i.id === id)
 
-        if (filtroGames != undefined) {
-            let { id, nome, price } = req.body
+        if (filtroTodos != undefined) {
+            let { id, nome, done } = req.body
 
 
             if (nome != undefined) {
-                filtroGames.nome = nome
+                filtroTodos.nome = nome
 
             }
-            if (price != undefined) {
-                filtroGames.price = price
+            
+            if (id != undefined) {
+                filtroTodos.id = id
 
             }
             if (id != undefined) {
-                filtroGames.id = id
+                filtroTodos.done = done
 
             }
             
@@ -150,5 +127,5 @@ app.put("/game/:id", (req, res) => {
 
 
 app.listen(process.env.PORT || 8080, () => {
-    console.log("rodando na pota 80")
+    console.log("rodando na pota 8080")
 })
