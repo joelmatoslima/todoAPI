@@ -11,13 +11,13 @@ app.use(bodyParser.json())
 var BD = {
     todo: [
         {
-            id: Date.now(millisecond),
+            id: new Date().getMilliseconds(),
             nome: "Tentar Conquistar o Mundo",
             done: false         
         },
         
         {
-            id: Date.now(millisecond),
+            id: new Date().getMilliseconds(),
             nome: "Aprender React Native",
             done: true         
         },
