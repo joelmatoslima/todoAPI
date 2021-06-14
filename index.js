@@ -11,7 +11,7 @@ app.use(bodyParser.json())
 var BD = {
     todo: [
         {
-            id: new Date().getMilliseconds(),
+            id: Date.now(),
             nome: "Tentar Conquistar o Mundo",
             done: false         
         },
