@@ -19,7 +19,7 @@ var BD = {
         {
             id: Date.now(),
             nome: "Aprender React Native",
-            done: false         
+            done: true         
         },
        
         
