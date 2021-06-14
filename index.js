@@ -13,9 +13,13 @@ var BD = {
         {
             id: Date.now(),
             nome: "Tentar Conquistar o Mundo",
-            done: false
-
-         
+            done: false         
+        },
+        
+        {
+            id: Date.now(),
+            nome: "Aprender React Native",
+            done: false         
         },
        
         
