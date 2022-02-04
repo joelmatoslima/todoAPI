@@ -8,124 +8,79 @@ app.use(cors())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
-var BD = {
-    todo: [
-        {
-            id: Date.now(),
-            nome: "Tentar Conquistar o Mundo",
-            done: false
+//const port = 3000
+/**------------------------------------------- */
+const events = require('events');
+const myEmitter =  new events.EventEmitter();
 
-         
-        },
-       
+function sse(req,res,next){
+    // Setamos as headers para indicar um SSE e evitar cache
+    res.writeHead(200, {
+        'Content-Type': 'text/event-stream',
+        'Cache-Control': 'no-cache',
+        'Access-Control-Allow-Origin': '*',
+        'Connection': 'keep-alive'
+      });
+
         
-    ]
+
+        myEmitter.on('cancelamento_pedido', ()=>{
+            // Iniciamos o envio da notificacao
+            res.write("event: notiticacao\n");
+            res.write('data: {"user_id": "1", "tipo": "cancelamento_pedido"}');
+            res.write("\n\n");
+
+        })
+
+        myEmitter.on('new_message', ()=>{
+            // Iniciamos o envio da notificacao
+            res.write("event: notiticacao\n");
+            res.write('data: {"user_id": "1", "tipo": "new_message"}');
+            res.write("\n\n");
+        })
 }
-
-
-app.get("/todos", (req, res) => {
-    res.statusCode = 200
-    res.json(BD.todo)
-    
-})
-
-app.get("/todo/:id", (req, res) => {
-
-    if (isNaN(req.params.id)) {
-        res.sendStatus(404)
-    } else {
-        let id = Number(req.params.id)
-        let filtroTodos = BD.todo.find((i) => i.id === id)
-
-        if (filtroTodos != undefined) {
-            res.statusCode = 200
-            res.json(filtroTodos)
-        } else {
-            res.sendStatus(400)
-        }
-    }
-})
-
-app.post("/todo", (req, res) => {
-    let { id, nome,done } = req.body
-
-    BD.todo.push({
-        id,
-        nome,
-        done
-
-        
-
-    })
-    res.sendStatus(200)
-    //res.json(jogo)
-
-})
-
-
-app.delete("/todo/:id", (req, res) => {
-    let id = req.params.id
-
-    if (isNaN(id)) {
-        res.sendStatus(404)
-    } else {
-        id = Number(id)
-
-        let ind = BD.todo.findIndex((i) => i.id == id)
-
-        if (ind == -1) {
-            res.sendStatus(404)
-        } else {
-            BD.todo.splice(ind, 1)
-            res.sendStatus(200)
-        }
-
-    }
-})
-
-app.put("/todo/:id", (req, res) => {
-
-    if (isNaN(req.params.id)) {
-        res.sendStatus(404)
-    } else {
-        let id = Number(req.params.id)
-        let filtroTodos = BD.todo.find((i) => i.id === id)
-
-        if (filtroTodos != undefined) {
-            let { id, nome, done } = req.body
-
-
-            if (nome != undefined) {
-                filtroTodos.nome = nome
-
-            }
-            
-            if (id != undefined) {
-                filtroTodos.id = id
-
-            }
-            if (id != undefined) {
-                filtroTodos.done = done
-
-            }
-            
-
-            res.sendStatus(200)
-
-        } else {
-            res.sendStatus(400)
-        }
-    }
-
-
-
-})
-
-
+ 
  
 
 
+app.get('/events',sse, (req, res) => {
+  res.send('Hello World!')
+})
+
+
+
+app.get('/pedidos/cancelamento', (req,res)=>{
+
+    /**
+     * Aqui vai toda a possível rotina para
+     * receber o cancelamento do pedido 
+     * e atualizar no banco de dados;
+     */
+
+    myEmitter.emit('cancelamento_pedido');
+    res.send('Hello World!')
+})
+
+// app.get('/pedidos/novo', (req,res)=>{
+  app.get('/message/new', (req,res)=>{
+
+    /**
+     * Aqui vai toda a possível rotina para
+     * receber o cancelamento do pedido 
+     * e atualizar no banco de dados;
+     */
+
+  
+
+
+    myEmitter.emit('new_message');
+    res.send('Hello World!')
+})
+
+// app.listen(port, () => {
+//   console.log(`Example app listening at http://localhost:${port}`)
+// })
 
 app.listen(process.env.PORT || 8080, () => {
-    console.log("rodando na pota 8080")
+  console.log("rodando na pota 8080")
 })
