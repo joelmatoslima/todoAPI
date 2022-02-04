@@ -41,6 +41,9 @@ function sse(req,res,next){
 }
  
  
+app.get('/', (req, res) => {
+    res.send('Home')
+}
 
 
 app.get('/events',sse, (req, res) => {
